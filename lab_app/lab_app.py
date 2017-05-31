@@ -152,7 +152,7 @@ def to_plotly():
 	import plotly.plotly as py
 	import plotly
 	from plotly.graph_objs import *
-    plotly.tools.set_credentials_file(username='cleitonrferreira', api_key='ZbJHabN0BnZM7TSHKXuT')
+	plotly.tools.set_credentials_file(username='cleitonrferreira', api_key='ZbJHabN0BnZM7TSHKXuT')
 
 	temperatures, humidities, timezone, from_date_str, to_date_str = get_records()
 
