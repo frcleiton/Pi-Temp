@@ -22,20 +22,20 @@
 	      <form id="datetime_range" action="/lab_env_db" method="GET"> 
 	        <!-- <div class="row">          -->
 	          <div class="three columns">
-	            <label for="from">Data de</label>
+	            <label for="from">From date</label>
 	            <input class="u-full-width" id="datetimepicker1" type="text" value="{{from_date}}" name="from">
 	          </div>
 	        <!-- </div> -->
 	        <!-- <div class="row"> -->
 	          <div class="three columns">
-	            <label for="to">Date até</label>           
+	            <label for="to">To date</label>           
 	            <input class="u-full-width" id="datetimepicker2" type="text" value="{{to_date}}" name="to">
 	          </div>   
 	        <!-- </div>          -->
 	        <!-- <div class="row"> -->
 	          <div class="two columns">    
 	            <input type="hidden" class="timezone" name="timezone" />       
-	            <input class="button-primary" type="submit" value="Enviar" style="position:relative; top: 28px" id="submit_button" />
+	            <input class="button-primary" type="submit" value="Submit" style="position:relative; top: 28px" id="submit_button" />
 	          </div>
 	        <!-- </div> -->
 	      </form> 
@@ -46,7 +46,7 @@
       		<div class="one column">
 		      <a href="" id="plotly" style="position:relative;top:15px">Plotly</a>
 		</div>
-          <a href="/lab_temp" style="position:relative;top:15px">Temp agora</a>
+          <a href="/lab_temp" style="position:relative;top:15px">Current</a>
        	</div>
         <form id="range_select" action = "/lab_env_db" method="GET">  
           <input type="hidden" class="timezone" name="timezone" />      
@@ -129,24 +129,24 @@
   <script>
     jQuery( "#datetime_range" ).submit(function( event ) {
         timezone = jstz.determine();
-        jQuery(".timezone").val(timezone.name());
+        jQuery(".timezone").val(timezone.name());      
     });
 
     jQuery('#datetimepicker1').datetimepicker(
       {
-        defaultDate:'{{from_date}}',
-        locale: 'pt-br'
+        format:'Y-m-d H:i',
+        defaultDate:'{{from_date}}'
       });
     jQuery('#datetimepicker2').datetimepicker({
-        format: 'Y-m-d H:i',
+        format:'Y-m-d H:i',
         defaultDate:'{{to_date}}'
       });
 
     jQuery("#range_select input[type=radio]").click(function(){
         timezone = jstz.determine();
-        jQuery(".timezone").val(timezone.name());
+        jQuery(".timezone").val(timezone.name()); 
         jQuery("#range_select").submit();
-    });
+      });
 
     jQuery("#plotly").click(function(){
       jQuery("#plotly_wait").text("Sending data...");

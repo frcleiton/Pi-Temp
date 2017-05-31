@@ -59,9 +59,11 @@ def hello():
 @app.route("/lab_temp")
 def lab_temp():
 	import sys
-	import Adafruit_DHT
-	humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 17)
-	temperature = temperature * 9/5.0 + 32
+	#import Adafruit_DHT
+	#humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 17)
+	#temperature = temperature * 9/5.0 + 32
+        humidity = 67
+        temperature = 20.3
 	if humidity is not None and temperature is not None:
 		return render_template("lab_temp.html",temp=temperature,hum=humidity)
 	else:
@@ -85,20 +87,20 @@ def lab_env_db():
 	print "rendering lab_env_db.html with: %s, %s, %s" % (timezone, from_date_str, to_date_str)
 
 	return render_template("lab_env_db.html",	timezone		= timezone,
-												temp 			= time_adjusted_temperatures,
-												hum 			= time_adjusted_humidities, 
-												from_date 		= from_date_str, 
-												to_date 		= to_date_str,
-												temp_items 		= len(temperatures),
-												query_string	= request.query_string, #This query string is used
-																						#by the Plotly link
-												hum_items 		= len(humidities))
+							temp 			= time_adjusted_temperatures,
+						    hum 			= time_adjusted_humidities, 
+							from_date 		= from_date_str, 
+							to_date 		= to_date_str,
+							temp_items 		= len(temperatures),
+							query_string	= request.query_string, #This query string is used
+							#by the Plotly link
+							hum_items 		= len(humidities))
 
 def get_records():
 	import sqlite3
 	from_date_str 	= request.args.get('from',time.strftime("%Y-%m-%d 00:00")) #Get the from date value from the URL
 	to_date_str 	= request.args.get('to',time.strftime("%Y-%m-%d %H:%M"))   #Get the to date value from the URL
-	timezone 		= request.args.get('timezone','Etc/UTC');
+	timezone		= request.args.get('timezone','America/Sao_Paulo')
 	range_h_form	= request.args.get('range_h','');  #This will return a string, if field range_h exists in the request
 	range_h_int 	= "nan"  #initialise this variable with not a number
 
@@ -129,11 +131,11 @@ def get_records():
 		from_date_utc   = arrow_time_from.strftime("%Y-%m-%d %H:%M")	
 		to_date_utc     = arrow_time_to.strftime("%Y-%m-%d %H:%M")
 		from_date_str   = arrow_time_from.to(timezone).strftime("%Y-%m-%d %H:%M")
-		to_date_str	    = arrow_time_to.to(timezone).strftime("%Y-%m-%d %H:%M")
+		to_date_str		= arrow_time_to.to(timezone).strftime("%Y-%m-%d %H:%M")
 	else:
 		#Convert datetimes to UTC so we can retrieve the appropriate records from the database
-		from_date_utc   = arrow.get(from_date_obj, timezone).to('Etc/UTC').strftime("%Y-%m-%d %H:%M")	
-		to_date_utc     = arrow.get(to_date_obj, timezone).to('Etc/UTC').strftime("%Y-%m-%d %H:%M")
+		from_date_utc   = arrow.get(from_date_obj, timezone).to('America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")	
+		to_date_utc     = arrow.get(to_date_obj, timezone).to('America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")
 
 	conn 			    = sqlite3.connect('/var/www/lab_app/lab_app.db')
 	curs 			    = conn.cursor()
@@ -148,7 +150,9 @@ def get_records():
 @app.route("/to_plotly", methods=['GET'])  #This method will send the data to ploty.
 def to_plotly():
 	import plotly.plotly as py
+	import plotly
 	from plotly.graph_objs import *
+    plotly.tools.set_credentials_file(username='cleitonrferreira', api_key='ZbJHabN0BnZM7TSHKXuT')
 
 	temperatures, humidities, timezone, from_date_str, to_date_str = get_records()
 
@@ -205,7 +209,6 @@ def to_plotly():
 					)
 	fig = Figure(data=data, layout=layout)
 	plot_url = py.plot(fig, filename='lab_temp_hum')
-
 	return plot_url
 
 def validate_date(d):

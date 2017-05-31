@@ -5,7 +5,7 @@ app.debug = True
 
 @app.route("/")
 def hello():
-    return render_template('hello.html', message="Hello World!")
+    return render_template('hello.html', message="Termohigrometro IoT")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
