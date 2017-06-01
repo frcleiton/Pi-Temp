@@ -150,8 +150,9 @@ def get_records():
 @app.route("/to_plotly", methods=['GET'])  #This method will send the data to ploty.
 def to_plotly():
 	import plotly.plotly as py
-	from plotly.graph_objs import *
 	import plotly
+	from plotly.graph_objs import *
+	
 	plotly.tools.set_credentials_file(username='cleitonrferreira', api_key='ZbJHabN0BnZM7TSHKXuT')
 	
 	temperatures, humidities, timezone, from_date_str, to_date_str = get_records()
