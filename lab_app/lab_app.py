@@ -88,7 +88,7 @@ def lab_env_db():
 
 	return render_template("lab_env_db.html",	timezone		= timezone,
 							temp 			= time_adjusted_temperatures,
-						    hum 			= time_adjusted_humidities, 
+                                                        hum 			= time_adjusted_humidities, 
 							from_date 		= from_date_str, 
 							to_date 		= to_date_str,
 							temp_items 		= len(temperatures),
@@ -126,18 +126,19 @@ def get_records():
 
 	# If range_h is defined, we don't need the from and to times
 	if isinstance(range_h_int,int):	
-		#arrow_time_from = arrow.utcnow().replace(hours=-range_h_int)
-		#arrow_time_to   = arrow.utcnow()
-                #America Sao Paulo
-		arrow_time_from = arrow.to(timezone).replace(hours=-range_h_int)
-		arrow_time_to   = arrow.to(timezone)
-		from_date_utc   = arrow_time_from.strftime("%Y-%m-%d %H:%M")	
+		arrow_time_from = arrow.now().replace(hours=-range_h_int)
+		arrow_time_to   = arrow.now()
+                from_date_utc   = arrow_time_from.strftime("%Y-%m-%d %H:%M")	
 		to_date_utc     = arrow_time_to.strftime("%Y-%m-%d %H:%M")
-		from_date_str   = arrow_time_from.to(timezone).strftime("%Y-%m-%d %H:%M")
-		to_date_str	= arrow_time_to.to(timezone).strftime("%Y-%m-%d %H:%M")
+		#from_date_str   = arrow_time_from.to(timezone).strftime("%Y-%m-%d %H:%M")
+		#to_date_str	= arrow_time_to.to(timezone).strftime("%Y-%m-%d %H:%M")
+		from_date_str   = arrow_time_from.strftime("%Y-%m-%d %H:%M")
+		to_date_str	= arrow_time_to.strftime("%Y-%m-%d %H:%M")
 	else:
 		#Convert datetimes to UTC so we can retrieve the appropriate records from the database
-		from_date_utc   = arrow.get(from_date_obj, timezone).to('America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")	
+		#from_date_utc   = arrow.get(from_date_obj, timezone).to('America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")	
+		#to_date_utc     = arrow.get(to_date_obj, timezone).to('America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")
+                from_date_utc   = arrow.get(from_date_obj, timezone).strftime("%Y-%m-%d %H:%M")	
 		to_date_utc     = arrow.get(to_date_obj, timezone).to('America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")
 
 	conn 	= sqlite3.connect('/var/www/lab_app/lab_app.db')
